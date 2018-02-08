@@ -1,0 +1,40 @@
+---
+- hosts: 62.138.6.28
+  remote_user: zadatak
+  become_user: root
+  become_method: sudo
+  become: yes
+  tasks:
+  - name: install docker-compose
+    apt:
+      name: docker-compose
+  - name: install supervisor
+    apt:
+      name: supervisor
+  - name: create log directory
+    file:
+      path: /opt/run/webphp/log
+      state: directory
+      mode: 0755
+  - name: create config directory
+    file:
+      path: /opt/run/webphp/config
+      state: directory
+      mode: 0755
+  - name: copy apache and php config to remote server
+    copy:
+      dest: /opt/run/webphp/config
+      src: ./config/
+  - name: add docker to supervisor
+    copy:
+      src: docker.conf
+      dest: /etc/supervisor/conf.d/docker.conf
+  - name: start supervisor now
+    command: systemctl enable supervisor
+  - name: start supervisor automatically in the future
+    command: systemctl start supervisor
+  - name: start docker from supervisor
+    supervisorctl:
+      name: docker
+      state: started
+...
