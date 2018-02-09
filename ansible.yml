@@ -23,8 +23,10 @@
       mode: 0755
   - name: copy apache and php config to remote server
     copy:
-      dest: /opt/run/webphp/config
-      src: ./config/
+      dest: /opt/run/webphp/config.tar
+      src: ./config.tar
+  - name: extract config
+    command: tar -C /opt/run/webphp -xf config.tar
   - name: add docker to supervisor
     copy:
       src: docker.conf
@@ -33,8 +35,11 @@
     command: systemctl enable supervisor
   - name: start supervisor automatically in the future
     command: systemctl start supervisor
+  - name: update supervisord
+    command: supervisorctl update
   - name: start docker from supervisor
     supervisorctl:
       name: docker
-      state: started
+      state: restarted
+
 ...

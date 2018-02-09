@@ -1,2 +1,2 @@
 [webphp]
-62.138.6.28:47222
+62.138.6.28:47222 ansible_connction=ssh ansible_user=zadatak
