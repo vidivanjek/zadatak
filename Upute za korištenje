@@ -1,0 +1,20 @@
+Sve naredbe pokreću se iz direktorija u kojem se nalazi Dockerfile.
+
+Za instalaciju mrežnog poslužitelja s php podrškom potrebno je prijaviti se kao root i pokrenuti slijedeću naredbu:
+# docker build -t zadatak .
+
+U datoteku inventory je prema potrebi potrebno popisati adrese poslužitelja na koje je potrebno postaviti programe.
+
+Za instalaciju svih popratnih programa te podešavanje i pokretanja poslužitelja potrebno je pokrenuti slijedeću ansible skriptu na opisan način:
+$ ansible-playbook -i inventory --ask-become-pass ansible.yml -k -c local
+
+Ukoliko se ansible skripta ne pokreće lokalno nego preko SSH-a s drugog računala treba pokrenuti s:
+$ ansible-playbook -i inventory --ask-become-pass ansible.yml -k
+
+Za snimanje prometa pomoću tcpduma potrebno je pokrenuti tcpdump na slijedeći način kao root:
+# tcpdump -i any port 47280 -w promet.pcap
+
+Pritom se 47280 može zamijeniti drugim portom ako je port promijenjen u docker.conf.
+
+Za pregled snimljenog prometa potrebo je pokrenuti Wireshark na slijedeći način:
+# wireshark promet.pcap
